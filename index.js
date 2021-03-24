@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const bcrypt = require("bcrypt");
 const User = require('./models/users');
 
 mongoose.connect('mongodb://localhost:27017/usersDB', {
@@ -20,26 +21,45 @@ app.get("/login", (req,res) => {
     res.render("login");
 });
 
-app.post("/",(req,res) =>{
+app.post("/",async (req,res) =>{
 
-    const email = req.body.email;
-    const password = req.body.password;
-    //console.log(req.body);
-    console.log(email,password);
-    const newUser = new User({
-        email: email,
-        password: password
-    });
+    const { email, password } = req.body;
 
-    newUser.save(err=> {
-        err ? console.log(err) : res.send("Successfully Created User");
-    });
     
-});
+    if (!email || !password) {
+      res.send("Please enter all the fields");
+      return;
+    }
 
-app.post("/login",(req,res) => {
+    const doesUserExitsAlreay = await User.findOne({ email });
+
+    if (doesUserExitsAlreay) {
+      res.send("A user with that email already exits please try another one!");
+      return;
+    }
+
+    // lets hash the password
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const latestUser = new User({ email, password: hashedPassword });
+
+    latestUser
+      .save()
+      .then(() => {
+        res.send("User Created Successfully !");
+        return;
+      })
+      .catch((err) => console.log(err));
+  });
+
+app.post("/login", async (req,res) => {
     const email = req.body.email;
     const password = req.body.password;
+    const doesUserExits = await User.findOne({ email });
+
+    if (!doesUserExits) {
+      res.send("invalid username or password");
+      return;
+    }
 
     User.findOne({ email: email}, (err,foundResults) => {
         if(err) {
@@ -48,7 +68,16 @@ app.post("/login",(req,res) => {
         if (foundResults.password == password) {
             res.send("Successfully logged in !");
              
-        } else {
+        } else 
+        if (!doesUserExits) {
+            res.send("invalid username or password");
+           
+          } else 
+          if (!email || !password) {
+            res.send("Please enter all the fields");
+         
+          } else
+        {
             res.send("Incorrect email or password ");
         }
     });
@@ -56,3 +85,4 @@ app.post("/login",(req,res) => {
 
 app.listen(3000);
 console.log("Server running in port 3000");
+
