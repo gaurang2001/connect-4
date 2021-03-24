@@ -38,9 +38,7 @@ app.post("/",async (req,res) =>{
       return;
     }
 
-    // lets hash the password
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const latestUser = new User({ email, password: hashedPassword });
+   const latestUser = new User({ email, password });
 
     latestUser
       .save()
