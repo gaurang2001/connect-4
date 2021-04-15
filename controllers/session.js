@@ -3,11 +3,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 exports.getLogin = (req, res) => {
-    res.render("login");
+    res.render("login", { notice: req.flash('notice'), alert: req.flash('alert') });
 }
 
 exports.getRegister = (req, res) => {
-    res.render("register");
+    res.render("register", { notice: req.flash('notice'), alert: req.flash('alert') });
 }
 
 exports.postLogin = async (req, res) => {
@@ -16,12 +16,14 @@ exports.postLogin = async (req, res) => {
     const doesUserExists = await User.findOne({ email });
 
     if (!doesUserExists) {
-      res.send("User does not exist");
+      req.flash("alert", "User does not exist");
+      res.redirect("/login");
       return;
     }
     
     if (!email || !password) {
-        res.send("Please enter all the fields");
+        req.flash("alert", "Please enter all the fields");
+        res.redirect("/login");
          
     } else {
         bcrypt.compare(password, doesUserExists.password, function(e, r){
@@ -30,12 +32,14 @@ exports.postLogin = async (req, res) => {
                 return;
             }
             if(r) {
-                const token = jwt.sign({id: doesUserExists.id, loggedin: true}, "S3CrET0");
-                //res.header("auth-token", token).send({"token": token});
+                const token = jwt.sign(doesUserExists.email, "secret");
+                res.cookie("connect4", token, {expire: '30d'});
 
-                res.send("Successfully logged in !");
+                req.flash("notice", "Successfully logged in");
+                res.redirect("/");
             } else {
-                res.send("Incorrect email or password ");
+                req.flash("alert", "Incorrect email or password");
+                res.redirect("/login");
             }
         });
     }
@@ -45,14 +49,15 @@ exports.postRegister = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.send("Please enter all the fields");
-      return;
+        req.flash("alert", "Please enter all the fields");
+        res.redirect("/register");
     }
 
     const doesUserExitsAlready = await User.findOne({ email });
 
     if (doesUserExitsAlready) {
-      res.send("A user with that email already exits please try another one!");
+      req.flash("alert", "A user with that email already exists. Please try another one");
+      res.redirect("/register");
       return;
     }
 
@@ -68,8 +73,15 @@ exports.postRegister = async (req, res) => {
         .save()
         .then((value) => {
             console.log(value);
+            req.flash("notice", "User successfully registered")
             res.redirect("/login");
             return;
         }).catch((err) => console.log(err));
     });    
+}
+
+exports.postLogout = (req, res) => {
+    res.clearCookie("connect4");
+    req.flash("notice", "Successfully logged out");
+    res.redirect("/login");
 }

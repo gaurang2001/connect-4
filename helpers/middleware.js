@@ -2,28 +2,33 @@ const jwt = require("jsonwebtoken");
 
 exports.isLoggedIn = (req,res,next) => {
     try {
-        let token = req.header('Authorization');
+        const token = req.cookies.connect4;
 
-        if(token) console.log(token);
-        else { res.redirect("/login"); return; }
-
-        if (token.startsWith('Bearer ')) {
-            token = token.slice(7, token.length).trimLeft();
+        if (token == null) {
+            if(req.originalUrl === "/login" || req.originalUrl === "/register") return next();
+            else return res.redirect("/login");
         }
 
-        console.log(token);
+        jwt.verify(token, "secret", (err, user_email) => {
+            if (err) {
+                console.log(err);
+                return res.redirect("/login");
+            }
 
-        const verified = jwt.verify(token, "S3CrET0");
+            req.user_email = user_email;
 
-        if(!verified.loggedin) {
-            res.redirect("/login");
-            return;
-        }
+            if(req.originalUrl === "/login" || req.originalUrl === "/register") {
+                req.flash("alert", "User is already logged in");
+                return res.redirect("/");
+            }
 
-        next();
+            next();
+        });
     }
 
     catch(err) {
+        console.log(err);
+
         res.redirect("/login");
         return;
     }
