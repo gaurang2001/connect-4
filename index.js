@@ -5,7 +5,10 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 var session = require('express-session');
 var flash = require('express-flash');
+const passport = require('passport')
 const app = express();
+const keys = require("./helpers/keys")
+require('./helpers/passport-setup')
 
 const sessionRoutes = require("./routes/session");
 
@@ -20,10 +23,14 @@ app.use(cookieParser("secret"));
 
 app.use(session({
     cookie: { maxAge: 60000 },
+    keys: [keys.session.cookieKey],
     saveUninitialized: true,
     resave: 'true',
     secret: "secret"
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash());
 
