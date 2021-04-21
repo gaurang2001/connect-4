@@ -5,7 +5,7 @@ exports.isLoggedIn = (req,res,next) => {
         const token = req.cookies.connect4;
 
         if (token == null) {
-            if(req.originalUrl === "/login" || req.originalUrl === "/register") return next();
+            if(req.originalUrl === "/login" || req.originalUrl === "/register" || req.originalUrl === "/changepass") return next();
             else return res.redirect("/login");
         }
 
