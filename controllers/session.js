@@ -11,8 +11,8 @@ exports.getRegister = (req, res) => {
     res.render("register", { notice: req.flash('notice'), alert: req.flash('alert') });
 }
 
-exports.getChangepass = (req, res) => {
-    res.render("changepass", { notice: req.flash('notice'), alert: req.flash('alert') });
+exports.getUpdateprofile = (req, res) => {
+    res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert') });
 }
 
 exports.postLogin = async (req, res) => {
@@ -94,20 +94,21 @@ exports.postRegister = async (req, res) => {
     });    
 }
 
-exports.postChangepass = async (req,res) => {
+exports.postUpdateprofile = async (req,res) => {
     const email = req.body.email;
     const password = req.body.password;
+    const username = req.body.username;
   
     const doesUserExists = await User.findOne({ email });
     if (!doesUserExists) {
-        req.flash("alert", "User does not exist");
-        res.redirect("/login");
+        req.flash("alert", "Incorrect Email");
+        res.redirect("/");
         return;
       }
-      if(!email || !password){
+      if(!email || !password || !username){
         req.flash("alert","Enter all fields");
         console.log("enter all fields");
-        res.redirect("/login");
+        res.redirect("/");
         return;
     }
       else{
@@ -116,14 +117,14 @@ exports.postChangepass = async (req,res) => {
                 console.log(e);
                 return;
             }
-    var newvalues = {$set: {email: email,password: hashPassword}};
+    var newvalues = {$set: {email: email,password: hashPassword,username: username}};
     var myquery = {email: email}
     users.updateOne(myquery,newvalues, function(err,result){
         if(err) throw err;
-        console.log("password changed successfully");
+        console.log("Profile updated successfully");
     });
-    req.flash("notice","Password Changed Successfully");
-    res.redirect("/login");
+    req.flash("notice","Profile updated Successfully");
+    res.redirect("/");
     return;
     });
 

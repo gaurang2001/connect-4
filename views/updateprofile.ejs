@@ -7,23 +7,28 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
-    <title>Change Password</title>
+    <title>Update Profile</title>
   </head>
   <body>
       <div class = "container mt-5">
 
-          <h1>Change Password</h1>
-          <form method="POST" action="/changepass" autocomplete="off">
+          <h1>Update Profile</h1>
+          <form method="POST" action="/updateprofile" autocomplete="off">
             <div class="mb-3">
-              <label for="email" class="form-label">Email address</label>
-              <input name="email" type="email" class="form-control" placeholder="Enter email" id="email"
+              <label for="email" class="form-label">Email Address</label>
+              <input name="email" type="email" class="form-control" placeholder="Enter Email id" id="email"
+                aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+              <label for="username" class="form-label">New Username</label>
+              <input name="username" type="username" class="form-control" placeholder="Enter new username" id="username"
                 aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">New Password</label>
               <input name="password" type="password" class="form-control" placeholder="Enter new password" id="password">
             </div>
-            <button type="submit" class="btn btn-primary">Change Password  </button> 
+            <button type="submit" class="btn btn-primary">Update Profile </button> 
           </form>
           </div>
 
