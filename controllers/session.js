@@ -17,7 +17,7 @@ exports.getChangepass = (req, res) => {
 
 exports.postLogin = async (req, res) => {
     const email = req.body.email;
-    const password = req.body.password;
+    const password = req.body.your_pass;
     var username;
     const doesUserExists = await User.findOne({ email });
 
@@ -60,9 +60,12 @@ exports.postLogin = async (req, res) => {
 }
 
 exports.postRegister = async (req, res) => {
-    const { email, password , username } = req.body;
 
-    if (!email || !password) {
+    const email = req.body.email;
+    const password = req.body.pass;
+    const username = req.body.uname;
+
+    if (!email || !password || !username) {
         req.flash("alert", "Please enter all the fields");
         res.redirect("/register");
     }
