@@ -11,8 +11,10 @@ exports.getRegister = (req, res) => {
     res.render("register", { notice: req.flash('notice'), alert: req.flash('alert') });
 }
 
+
 exports.getUpdateprofile = (req, res) => {
     res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert') });
+
 }
 
 exports.postLogin = async (req, res) => {
@@ -94,6 +96,7 @@ exports.postRegister = async (req, res) => {
     });    
 }
 
+
 exports.postUpdateprofile = async (req,res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -109,6 +112,7 @@ exports.postUpdateprofile = async (req,res) => {
         req.flash("alert","Enter all fields");
         console.log("enter all fields");
         res.redirect("/");
+
         return;
     }
       else{
@@ -117,6 +121,7 @@ exports.postUpdateprofile = async (req,res) => {
                 console.log(e);
                 return;
             }
+
     var newvalues = {$set: {email: email,password: hashPassword,username: username}};
     var myquery = {email: email}
     users.updateOne(myquery,newvalues, function(err,result){
@@ -125,6 +130,7 @@ exports.postUpdateprofile = async (req,res) => {
     });
     req.flash("notice","Profile updated Successfully");
     res.redirect("/");
+
     return;
     });
 
