@@ -11,7 +11,7 @@ exports.getRegister = (req, res) => {
 }
 
 exports.getUpdateprofile = (req, res) => {
-    res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), user_email: req.user_email });
+    res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user });
 }
 
 exports.postLogin = async (req, res) => {

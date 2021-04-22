@@ -44,16 +44,16 @@
   <div class="container mt-5">
     <h1>Update Profile</h1>
     <form method="POST" action="/updateprofile" autocomplete="off">
-      <input name="email" type="hidden" value="<%= user_email %>">
+      <input name="email" type="hidden" value="<%= current_user.email %>">
       <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
         <input name="" type="email" class="form-control" placeholder="Enter email ID" id="email" disabled="true"
-          value="<%= user_email %>">
+          value="<%= current_user.email %>">
       </div>
       <div class="mb-3">
-        <label for="username" class="form-label">New Username</label>
+        <label for="username" class="form-label">Username</label>
         <input name="username" type="username" class="form-control" placeholder="Enter new username" id="username"
-          aria-describedby="emailHelp">
+        value="<%= current_user.username %>">
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">New Password</label>
