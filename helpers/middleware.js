@@ -6,7 +6,7 @@ exports.isLoggedIn = (req,res,next) => {
 
         if (token == null) {
 
-            if(req.originalUrl === "/login" || req.originalUrl === "/register" || req.originalUrl === "/updateprofile") return next();
+            if(req.originalUrl === "/login" || req.originalUrl === "/register") return next();
 
             else return res.redirect("/login");
         }
