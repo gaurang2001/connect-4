@@ -1,7 +1,6 @@
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const users = require("../models/users");
 
 exports.getLogin = (req, res) => {
     res.render("login", { notice: req.flash('notice'), alert: req.flash('alert') });
@@ -118,9 +117,8 @@ exports.postChangepass = async (req,res) => {
             }
     var newvalues = {$set: {email: email,password: hashPassword}};
     var myquery = {email: email}
-    users.updateOne(myquery,newvalues, function(err,result){
+    User.updateOne(myquery,newvalues, function(err,result){
         if(err) throw err;
-        console.log("password changed successfully");
     });
     req.flash("notice","Password Changed Successfully");
     res.redirect("/login");

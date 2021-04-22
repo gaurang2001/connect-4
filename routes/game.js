@@ -20,7 +20,7 @@ router.get("/", function(req, res){
 });
 
 router.get("/:room([A-Za-z0-9]{6})", auth.isLoggedIn, (req, res) => {
-  res.render("play", { notice: req.flash('notice'), alert: req.flash('alert') });
+  res.render("play", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user });
 });
 
 module.exports = router;

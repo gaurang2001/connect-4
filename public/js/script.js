@@ -1,5 +1,5 @@
 const OGurl = window.location.origin;
-let socket = io.connect(OGurl);
+let socket = io.connect(OGurl, { query: {email: user_email, username: user_name} });
 
 var player = {},
 	yc = $('.your_color'),
