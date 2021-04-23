@@ -137,6 +137,7 @@ exports.postUpdateprofile = async (req, res) => {
 
 exports.postLogout = (req, res) => {
     res.clearCookie("connect4");
+    req.logout();
     req.flash("notice", "Successfully logged out");
     res.redirect("/login");
 }

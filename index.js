@@ -2,9 +2,15 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const morgan = require('morgan')
 const cookieParser = require("cookie-parser");
 const socketIo = require("socket.io");
 const http = require("http");
+var session = require('express-session');
+var flash = require('express-flash');
+const passport = require('passport');
+const keys = require("./helpers/keys")
+require('./helpers/passport-setup');
 
 const app = express();
 
@@ -29,20 +35,19 @@ app.use(cookieParser("secret"));
 
 app.use(session({
     cookie: { maxAge: 60000 },
+    keys: [keys.session.cookieKey],
     saveUninitialized: true,
     resave: "true",
     secret: "secret"
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(flash());
 
 // Log all requests
-app.use(function(req, res, next) {
-    console.log("\n",req.method, " ", req.originalUrl);
-    console.log(req.body);
-    
-    next();
-});
+app.use(morgan('dev'));
 
 app.use("/", sessionRoutes);
 app.use("/play", gameRoutes);
@@ -116,7 +121,7 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
     
             socket.on('makeMove', function(data){
                 var game = gameLogic.games[socket.room];
-                if(data.hash = socket.hash && game.turn == socket.pid){
+                if(data.hash = socket.hash && game.turn === socket.pid){
                     var move_made = gameLogic.make_move(socket.room, data.col, socket.pid);
 
                     if(move_made){
