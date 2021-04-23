@@ -7,23 +7,22 @@
 
     <!-- Main css -->
     <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="/CSS/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 
 
-  <title>Connect 4 Login</title>
+  <title>Login | Connect 4</title>
 
   <link rel="icon" type="image/png" href="/favicon.png"/>
 </head>
 
 <body>
-  <%- include("partials/alerts") %>
-  <div class="main">
-
+    <%- include("partials/alerts") %>
+    <div class="main">
          <!-- Sing in  Form -->
         <section class="sign-in">
-            <div class="container">
+            <div class="container-custom">
                 <div class="signin-content">
                     <div class="signin-image">
                         <figure><img src="media/signin-image.jpg" alt="sing up image"></figure>
@@ -48,7 +47,8 @@
                         <div class="social-login">
                             <span class="social-label">Or login with</span>
                             <ul class="socials">
-                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                                <li><a href="#"><img class="display-flex-center zmdi" 
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"></a></li>
                             </ul>
                         </div>
                     </div>
@@ -57,5 +57,8 @@
         </section>
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"></script>
 </body>
 </html>

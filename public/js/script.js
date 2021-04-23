@@ -18,13 +18,14 @@ var player = {},
 		'popover_h2_lose' : "You lost the game..",
 		'popover_p_lose' : "Give the url to a friend to play another game",
 		'popover_h2_draw' : "Its a draw.. bummer!",
-		'popover_p_draw' : "Give the url to a friend to play another game",
+		'popover_p_draw' : "Give the URL to a friend to play another game",
+		'popover_h2_another_session' : "Not allowed",
+		'popover_p_another_session' : "You cannot play a game against yourself"
 	}
 
 	init();
 
 	socket.on('assign', function(data) {
-        console.log("ASSIGNED");
 		player.pid = data.pid;
 		player.hash = data.hash;
 		if(player.pid == "1"){
@@ -45,7 +46,6 @@ var player = {},
 	});
 
 	socket.on('winner', function(data) {
-        console.log("WINNER");
 		oc.removeClass('show');
 		yc.removeClass('show');
 		change_turn(false);
@@ -86,9 +86,25 @@ var player = {},
 		$('.popover').addClass('hidden');
 	});
 
+	socket.on('assign_names', function(data) {
+		$('#player1').html(data.player1);
+		$('#player2').html(data.player2);
+	})
+
 	socket.on('stop', function(data) {
 		init();
 		reset_board();
+
+		oc.removeClass('show');
+		yc.removeClass('show');
+
+		$('.popover h2').html(text.popover_h2_win);
+		$('.popover p').html(text.popover_p_win);
+
+		setTimeout(function(){
+			$('.underlay').removeClass('hidden');
+			$('.popover').removeClass('hidden');
+		},500);
 	});
 
 	socket.on('move_made', function(data) {
@@ -103,6 +119,17 @@ var player = {},
 			oc.css('left', parseInt(data.col)*100);
 		}
 		console.debug(data);
+	});
+
+	socket.on("not_allowed", function(data) {
+		$('.popover h2').html(text.popover_h2_another_session);
+		$('.popover p').html(text.popover_p_another_session);
+		$('.underlay').removeClass('hidden');
+		$('.popover').removeClass('hidden');
+		$('.share_url').hide();
+		setTimeout(function(){
+			window.location.href = "/";
+		}, 3000);
 	});
 
 	$('.cols > .col').mouseenter(function(){

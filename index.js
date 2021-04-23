@@ -71,26 +71,34 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
             if(data.room in gameLogic.games) {
                 var game = gameLogic.games[data.room];
                 if(typeof game.player2 != "undefined") return;
+                if(game.player1.email === socket.handshake.query.email) {
+                    socket.emit("not_allowed");
+                    return;
+                }
 
                 socket.join(data.room);
                 rooms.push(data.room);
                 socket.room = data.room;
                 socket.pid = 2;
                 socket.hash = generateHash(8);
+                socket.username = socket.handshake.query.username;
+                socket.email = socket.handshake.query.email;
                 game.player2 = socket;
                 socket.opponent = game.player1;
                 game.player1.opponent = socket;
                 socket.emit('assign', {pid: socket.pid, hash: socket.hash});
                 game.turn = 1;
                 socket.broadcast.to(data.room).emit("start");
+                console.log(game.player1.username);
+                io.in(socket.room).emit("assign_names", { player1: game.player1.username, player2: game.player2.username });
                 console.log("\nPlayer 2 has joined room: ", socket.room);
-                socket.username = socket.handshake.query.username;
-                socket.email = socket.handshake.query.email;
             } else {
                 if(rooms.indexOf(data.room) <= 0) socket.join(data.room);
                 socket.room = data.room;
                 socket.pid = 1;
                 socket.hash = generateHash(8);
+                socket.username = socket.handshake.query.username;
+                socket.email = socket.handshake.query.email;
                 gameLogic.games[data.room] = {
                     player1: socket,
                     moves: 0,
@@ -104,8 +112,6 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
                 rooms.push(data.room);
                 socket.emit("assign", {pid: socket.pid, hash: socket.hash});
                 console.log("\nPlayer 1 has joined room: ", socket.room);
-                socket.username = socket.handshake.query.username;
-                socket.email = socket.handshake.query.email;
             }
     
             socket.on('makeMove', function(data){
@@ -136,9 +142,9 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
             socket.on("disconnect", function () {
                 console.log("Client disconnected. ID: ", socket.id);
                 if(socket.room in gameLogic.games) {
-                    delete gameLogic.games[socket.room];
-                    socket.send("stop");
+                    io.in(socket.room).emit("stop");
                     console.log("Room closed: " + socket.room);
+                    delete gameLogic.games[socket.room];
                 } else {
                     console.log("Disconnect called but nothing happened");
                 }

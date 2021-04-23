@@ -2,67 +2,73 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Main css -->
     <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
-    <link rel="stylesheet" href="CSS/style.css">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-  
-  <script type="text/javascript" src="JS/register.js"></script>
+    <link rel="stylesheet" href="/CSS/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 
+    <script type="text/javascript" src="/JS/register.js"></script>
 
-  <title>Connect 4 Login</title>
+    <title>Register | Connect 4</title>
 
-  <link rel="icon" type="image/png" href="/favicon.png"/>
+    <link rel="icon" type="image/png" href="/favicon.png" />
 </head>
 
 <body>
-  <%- include("partials/alerts") %>
-  <div class="main">
-       <!-- Sign up form -->
+    <%- include("partials/alerts") %>
+    <div class="main">
+        <!-- Sign up form -->
         <section class="signup">
-            <div class="container">
+            <div class="container-custom">
                 <div class="signup-content">
                     <div class="signup-form">
                         <h2 class="form-title">Sign up</h2>
-                        <form method="POST" class="register-form" id="register-form" action="/register" autocomplete="off" onsubmit="return check(this)">
+                        <form method="POST" class="register-form" id="register-form" action="/register"
+                            autocomplete="off" onsubmit="return check(this)">
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                <input type="text" name="uname" id="name" placeholder="Your Username" onfocusout="usernamevalidation(this)"/>
+                                <input type="text" name="uname" id="name" placeholder="Your Username"
+                                    onfocusout="usernamevalidation(this)" />
                                 <div id="unamevalidation" style="color: #DC143C; font-size: 15px;"></div>
                             </div>
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                <input type="email" name="email" id="email" placeholder="Your Email"/>
+                                <input type="email" name="email" id="email" placeholder="Your Email" />
                             </div>
                             <div class="form-group">
                                 <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="pass" id="pass" placeholder="Password" onfocusout="passwordvalidation(this)"/>
+                                <input type="password" name="pass" id="pass" placeholder="Password"
+                                    onfocusout="passwordvalidation(this)" />
                                 <div id="pwdcheck" style="color: #DC143C; font-size: 15px;"></div>
                             </div>
                             <div class="form-group">
                                 <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password" onfocusout="passwordsmatching(this)"/>
+                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password"
+                                    onfocusout="passwordsmatching(this)" />
                                 <div id="pwdsmatch" style="color: #DC143C; font-size: 15px;"></div>
                             </div>
                             <div class="form-group form-button">
-                                <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
+                                <input type="submit" name="signup" id="signup" class="form-submit" value="Register" />
                             </div>
                         </form>
                     </div>
                     <div class="signup-image">
                         <figure><img src="media/signup-image.jpg" alt="sing up image"></figure>
-                        <a href="/login" class="signup-image-link">Already have an account</a>
+                        <a href="/login" class="signup-image-link">Already have an account?</a>
                     </div>
                 </div>
             </div>
         </section>
-        </div>
+    </div>
 
     <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

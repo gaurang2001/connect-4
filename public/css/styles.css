@@ -18,7 +18,7 @@ body{
 .game{
 	position: relative;
 	width: 700px;
-	margin: 120px auto 0;
+	margin: 80px auto 0;
 }
 
 .your_color{
@@ -191,4 +191,25 @@ body{
 		margin: 120px 0;
 		zoom: 138% !important;
 	}
+}
+
+.custom-card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  	transition: 0.3s;
+	border-radius: 5px;
+	padding: 30px;
+	margin-bottom: 30px;
+	width: 50%;
+}
+
+.custom-left {
+	left: 20px;
+	text-align: left;
+	float: left;
+}
+
+.custom-right {
+	right: 20px;
+	text-align: right;
+	float: right;
 }
