@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const morgan = require('morgan')
 const cookieParser = require("cookie-parser");
 var session = require('express-session');
 var flash = require('express-flash');
@@ -35,12 +36,7 @@ app.use(passport.session());
 app.use(flash());
 
 // Log all requests
-app.use(function(req, res, next) {
-    console.log(req.method, " ", req.originalUrl);
-    console.log(req.body);
-    
-    next();
-});
+app.use(morgan('dev'));
 
 app.use("/", sessionRoutes);
 
