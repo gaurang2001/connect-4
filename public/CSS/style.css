@@ -1,3 +1,7 @@
+body {
+  background: #f8f8f8 !important;
+}
+
 /* @extend display-flex; */
 display-flex, .display-flex, .display-flex-center, .signup-content, .signin-content, .social-login, .socials {
   display: flex;
@@ -92,7 +96,7 @@ body {
   font-weight: 400;
   font-family: 'Merriweather'; }
 
-.container {
+.container-custom {
   width: 900px;
   background: #fff;
   margin: 0 auto;
@@ -382,9 +386,6 @@ label.valid {
     -webkit-transform: scale(1.3) translateZ(0);
     transform: scale(1.3) translateZ(0); }
 
-.zmdi-google {
-  background: #e72734; }
-
 .signin-form {
   margin-right: 90px;
   margin-left: 80px; }
@@ -395,11 +396,11 @@ label.valid {
   margin-top: 10px; }
 
 @media screen and (max-width: 1200px) {
-  .container {
+  .container-custom {
     width: calc( 100% - 30px);
     max-width: 100%; } }
 @media screen and (min-width: 1024px) {
-  .container {
+  .container-custom {
     max-width: 1200px; } }
 @media screen and (max-width: 768px) {
   .signup-content, .signin-content {
@@ -467,5 +468,10 @@ label.valid {
   .social-label, .forgot-pwd {
     margin-right: 0px;
     margin-bottom: 10px; } }
+
+  .zmdi {
+    height: 30px;
+    width: 30px;
+  }
 
 /*# sourceMappingURL=style.css.map */
