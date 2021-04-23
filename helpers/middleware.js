@@ -5,13 +5,12 @@ exports.isLoggedIn = async function (req,res,next) {
     try {
 
         if (req.user) {
-            console.log(req.user);
             if(req.originalUrl === "/login" || req.originalUrl === "/register") {
                 req.flash("alert", "User is already logged in");
                 return res.redirect("/");
             }
 
-            return next();
+            res.locals.user = req.user;
 
         } else {
             const token = req.cookies.connect4;
