@@ -21,14 +21,15 @@ passport.use(new GoogleStrategy({
   (accessToken, refreshToken, profile, done) => {
         console.log('passport callback function fired')
         console.log(profile)
-        User.findOne({email:profile.emails.value}).then((currentUser) => {
+        User.findOne({email:profile.emails[0].value}).then((currentUser) => {
             if (currentUser) {
                 console.log("User Exists: " + currentUser)
                 done(null, currentUser)
             } else {
                 new User({
-                    email: profile.emails.value,
-                    password: profile.id
+                    email: profile.emails[0].value,
+                    password: profile.id,
+                    username: profile.name.givenName
                 }).save().then((newUser) => {
                     console.log('new User created: ' + newUser)
                     done(null, newUser)
