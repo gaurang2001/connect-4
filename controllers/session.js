@@ -13,6 +13,14 @@ exports.getRegister = (req, res) => {
 exports.getUpdateprofile = (req, res) => {
     res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user });
 }
+exports.getleaderboard = (req,res) => {
+   
+
+    User.find().sort({wins:-1}).exec(function(err,data){
+        res.render("leaderboard",{user: req.user, leaderboard: data});
+
+    });
+}
 
 exports.postGoogleLogin = (req, res) => {
     const token = jwt.sign(req.user.email, "secret");
@@ -70,7 +78,7 @@ exports.postRegister = async (req, res) => {
     const email = req.body.email;
     const password = req.body.pass;
     const username = req.body.uname;
-
+    
     if (!email || !password || !username) {
         req.flash("alert", "Please enter all the fields");
         res.redirect("/register");
@@ -108,7 +116,7 @@ exports.postUpdateprofile = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     const username = req.body.username;
-
+    
     const doesUserExists = await User.findOne({ email: email });
     if (!doesUserExists) {
         req.flash("alert", "Incorrect Email");

@@ -14,8 +14,8 @@ router.get('/google/callback',
 
 router.get("/login", auth.isLoggedIn, sessionController.getLogin);
 router.get("/register", auth.isLoggedIn, sessionController.getRegister);
-
 router.get("/updateprofile", auth.isLoggedIn, sessionController.getUpdateprofile);
+router.get("/leaderboard", auth.isLoggedIn, sessionController.getleaderboard);
 
 router.post("/login", auth.isLoggedIn, sessionController.postLogin);
 router.post("/register", auth.isLoggedIn, sessionController.postRegister);
