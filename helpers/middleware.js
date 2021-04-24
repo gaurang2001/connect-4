@@ -3,12 +3,8 @@ const User = require("../models/users");
 
 exports.isLoggedIn = async function (req, res, next) {
     try {
+        const token = req.cookies.connect4;
 
-        if (req.user) {
-            return next();
-        } else {
-            const token = req.cookies.connect4;
-            
         if (token == null) {
             if (req.originalUrl === "/login" || req.originalUrl === "/register") return next();
             else return res.redirect("/login");
@@ -30,14 +26,8 @@ exports.isLoggedIn = async function (req, res, next) {
                 return res.redirect("/");
             }
 
-                if(req.originalUrl === "/login" || req.originalUrl === "/register") {
-                    req.flash("alert", "User is already logged in");
-                    return res.redirect("/");
-                }
-
-                next();
-            });
-        }
+            next();
+        });
     }
 
     catch (err) {
