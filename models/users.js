@@ -4,7 +4,7 @@ const users = new mongoose.Schema({
     email: String,
     password: String,
     username: String,
-    wins: {type: Number, default: 0}
+    wins: { type: Number, default: 0 }
 });
 
-module.exports = mongoose.models.users || mongoose.model("users",users);
+module.exports = mongoose.models.users || mongoose.model("users", users);
