@@ -23,6 +23,7 @@ const sessionRoutes = require("./routes/session");
 const gameRoutes = require("./routes/game");
 
 const gameLogic = require("./controllers/game");
+const users = require("./models/users");
 
 app.set("view engine","ejs");
 app.set("views","views");
@@ -133,6 +134,16 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
                         var winner = gameLogic.check_for_win(game.board);
 
                         if(winner) {
+                            users.findOne({email: socket.email}, (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    users.updateOne({email: socket.email}, {$set: {wins: result.wins + 1}}, (err, result) => {
+                                        if (err) throw err;
+                                    })
+                                }
+                            })
+                            
                             io.in(socket.room).emit("winner", {winner: winner});
                             delete gameLogic.games[socket.room];
                         }
