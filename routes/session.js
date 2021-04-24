@@ -1,3 +1,4 @@
+const User = require("../models/users");
 const app = require("express");
 const router = app.Router();
 const passport = require('passport');
@@ -15,7 +16,6 @@ router.get('/google/callback',
 router.get("/login", auth.isLoggedIn, sessionController.getLogin);
 router.get("/register", auth.isLoggedIn, sessionController.getRegister);
 router.get("/updateprofile", auth.isLoggedIn, sessionController.getUpdateprofile);
-router.get("/leaderboard", auth.isLoggedIn, sessionController.getleaderboard);
 
 router.post("/login", auth.isLoggedIn, sessionController.postLogin);
 router.post("/register", auth.isLoggedIn, sessionController.postRegister);
@@ -24,7 +24,9 @@ router.post("/updateprofile", auth.isLoggedIn, sessionController.postUpdateprofi
 router.post("/logout", auth.isLoggedIn, sessionController.postLogout);
 
 router.get("/", auth.isLoggedIn, (req, res) => {
-  res.render("index", { notice: req.flash('notice'), alert: req.flash('alert') });
+  User.find().sort({ wins: -1 }).exec(function (err, data) {
+    res.render("index", { current_user: res.locals.user, leaderboard: data, notice: req.flash('notice'), alert: req.flash('alert') });
+  });
 });
 
 module.exports = router;

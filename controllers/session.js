@@ -13,14 +13,6 @@ exports.getRegister = (req, res) => {
 exports.getUpdateprofile = (req, res) => {
     res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user });
 }
-exports.getleaderboard = (req,res) => {
-   
-
-    User.find().sort({wins:-1}).exec(function(err,data){
-        res.render("leaderboard",{current_user: res.locals.user , leaderboard: data});
-
-    });
-}
 
 exports.postGoogleLogin = (req, res) => {
     const token = jwt.sign(req.user.email, "secret");
@@ -123,11 +115,47 @@ exports.postUpdateprofile = async (req, res) => {
         res.redirect("/updateprofile");
         return;
     }
-    if (!email || !password || !username) {
-        req.flash("alert", "Enter all fields");
+    if (!password && !username) {
+        req.flash("alert", "Enter atleast one field!");
         res.redirect("/updateprofile");
 
         return;
+    }
+
+    else if (!password) {
+
+        var newvalues = { $set: { username: username } };
+            var myquery = { email: email };
+
+            User.updateOne(myquery, newvalues, function (err, result) {
+                if (err) throw err;
+            });
+
+            req.flash("notice", "Profile updated successfully");
+            res.redirect("/");
+
+        return;
+    }
+    else if (!username){
+
+        await bcrypt.hash(password, 10, function (e, hashPassword) {
+            if (e) {
+                console.log(e);
+                return;
+            }
+
+            var newvalues = { $set: { password: hashPassword } };
+            var myquery = { email: email };
+
+            User.updateOne(myquery, newvalues, function (err, result) {
+                if (err) throw err;
+            });
+
+            req.flash("notice", "Password updated successfully");
+            res.redirect("/");
+
+        return;
+    });
     }
     else {
         await bcrypt.hash(password, 10, function (e, hashPassword) {

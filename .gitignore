@@ -1,7 +1,4 @@
 node_modules/
-
-.vscode/
-
+.vscode/*
 package-lock.json
-
 keys.js

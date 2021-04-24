@@ -6,7 +6,7 @@ function usernamevalidation(field){
         pass_msg.innerText = "Username is required.";
         return false;
       }
-      else if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{5}([_a-zA-Z0-9]{6})?/)==null){
+      else if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{5}([_a-zA-Z0-9]{6})?/)===null){
          pass_msg.innerText="Username has to start with _ or alphabets, and be between 6 to 12 characters with alphanumerics!";
          return false;
        }
@@ -24,7 +24,7 @@ function passwordvalidation(field){
 				pass_msg.innerText = "Password is required.";
         return false;
 			}
-			else if (pass.match("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")==null){
+			else if (pass.match("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})")===null){
 		     pass_msg.innerText="The password must be eight characters or longer, and have at least 1 lowercase alphabetical character, at least 1 uppercase alphabetical character and at least 1 numeric character";
          return false;}
 		     else{
