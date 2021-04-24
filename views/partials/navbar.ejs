@@ -6,7 +6,7 @@
         cursor: pointer;
         outline: none;
         text-align: center;
-        background: #fff;
+        background: transparent;
         width: 100%;
         transition: all .3s;
         border: 2px solid transparent;
@@ -24,10 +24,6 @@
         padding: 0 0 2px;
         position: absolute;
         pointer-events: none;
-    }
-
-    .dropbtn:hover {
-        border: 2px solid #f1f1f1;
     }
 
     .dropdown-custom {
@@ -75,7 +71,9 @@
 </nav>
 
 <div class="dropdown-custom">
-    <button onclick="myFunction()" class="dropbtn"><%= current_user.username %></button>
+    <button onclick="myFunction()" class="dropbtn">
+        <%= current_user.username %>
+    </button>
     <div id="myDropdown" class="dropdown-custom-content">
         <a href="/">Home</a>
         <a href="/updateprofile">Update Profile</a>
@@ -87,19 +85,19 @@
 
 <script>
     function myFunction() {
-      document.getElementById("myDropdown").classList.toggle("show");
+        document.getElementById("myDropdown").classList.toggle("show");
     }
 
     window.onclick = function (event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-custom-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-custom-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
         }
-      }
     }
-  </script>
+</script>
