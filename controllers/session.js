@@ -17,7 +17,7 @@ exports.getleaderboard = (req,res) => {
    
 
     User.find().sort({wins:-1}).exec(function(err,data){
-        res.render("leaderboard",{user: req.user, leaderboard: data});
+        res.render("leaderboard",{current_user: res.locals.user , leaderboard: data});
 
     });
 }
