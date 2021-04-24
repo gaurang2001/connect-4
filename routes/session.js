@@ -24,7 +24,7 @@ router.post("/updateprofile", auth.isLoggedIn, sessionController.postUpdateprofi
 router.post("/logout", auth.isLoggedIn, sessionController.postLogout);
 
 router.get("/", auth.isLoggedIn, (req, res) => {
-  res.render("index", { notice: req.flash('notice'), alert: req.flash('alert') });
+  res.render("index", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user });
 });
 
 module.exports = router;
