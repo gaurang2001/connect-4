@@ -70,7 +70,7 @@ exports.postRegister = async (req, res) => {
     const email = req.body.email;
     const password = req.body.pass;
     const username = req.body.uname;
-
+    
     if (!email || !password || !username) {
         req.flash("alert", "Please enter all the fields");
         res.redirect("/register");
@@ -108,18 +108,54 @@ exports.postUpdateprofile = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     const username = req.body.username;
-
+    
     const doesUserExists = await User.findOne({ email: email });
     if (!doesUserExists) {
         req.flash("alert", "Incorrect Email");
         res.redirect("/updateprofile");
         return;
     }
-    if (!email || !password || !username) {
-        req.flash("alert", "Enter all fields");
+    if (!password && !username) {
+        req.flash("alert", "Enter atleast one field!");
         res.redirect("/updateprofile");
 
         return;
+    }
+
+    else if (!password) {
+
+        var newvalues = { $set: { username: username } };
+            var myquery = { email: email };
+
+            User.updateOne(myquery, newvalues, function (err, result) {
+                if (err) throw err;
+            });
+
+            req.flash("notice", "Profile updated successfully");
+            res.redirect("/");
+
+        return;
+    }
+    else if (!username){
+
+        await bcrypt.hash(password, 10, function (e, hashPassword) {
+            if (e) {
+                console.log(e);
+                return;
+            }
+
+            var newvalues = { $set: { password: hashPassword } };
+            var myquery = { email: email };
+
+            User.updateOne(myquery, newvalues, function (err, result) {
+                if (err) throw err;
+            });
+
+            req.flash("notice", "Password updated successfully");
+            res.redirect("/");
+
+        return;
+    });
     }
     else {
         await bcrypt.hash(password, 10, function (e, hashPassword) {

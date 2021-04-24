@@ -1,0 +1,14 @@
+.start-btn{
+
+    border: 1.75px solid #999900;
+    border-radius: 30px;
+    font-weight: bold;
+    color: whitesmoke;
+    font-size: 1.8em;
+
+}
+.start-btn:active {
+	box-shadow: none;
+	position: relative;
+	top: .2em;
+}
