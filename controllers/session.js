@@ -1,7 +1,6 @@
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const users = require("../models/users");
 
 exports.getLogin = (req, res) => {
     res.render("login", { notice: req.flash('notice'), alert: req.flash('alert') });
@@ -12,7 +11,23 @@ exports.getRegister = (req, res) => {
 }
 
 exports.getUpdateprofile = (req, res) => {
-    res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), user_email: req.user_email });
+    res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user });
+}
+exports.getleaderboard = (req,res) => {
+   
+
+    User.find().sort({wins:-1}).exec(function(err,data){
+        res.render("leaderboard",{current_user: res.locals.user , leaderboard: data});
+
+    });
+}
+
+exports.postGoogleLogin = (req, res) => {
+    const token = jwt.sign(req.user.email, "secret");
+    res.cookie("connect4", token, { expire: '30d' });
+    req.flash("notice", "Successfully logged in, Welcome " + req.user.username);
+    req.logout();
+    res.redirect('/');
 }
 
 exports.postLogin = async (req, res) => {
@@ -63,7 +78,7 @@ exports.postRegister = async (req, res) => {
     const email = req.body.email;
     const password = req.body.pass;
     const username = req.body.uname;
-
+    
     if (!email || !password || !username) {
         req.flash("alert", "Please enter all the fields");
         res.redirect("/register");
@@ -101,7 +116,7 @@ exports.postUpdateprofile = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     const username = req.body.username;
-
+    
     const doesUserExists = await User.findOne({ email: email });
     if (!doesUserExists) {
         req.flash("alert", "Incorrect Email");
@@ -124,7 +139,7 @@ exports.postUpdateprofile = async (req, res) => {
             var newvalues = { $set: { password: hashPassword, username: username } };
             var myquery = { email: email };
 
-            users.updateOne(myquery, newvalues, function (err, result) {
+            User.updateOne(myquery, newvalues, function (err, result) {
                 if (err) throw err;
             });
 
