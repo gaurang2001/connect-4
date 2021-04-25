@@ -9,12 +9,13 @@ const http = require("http");
 var session = require('express-session');
 var flash = require('express-flash');
 const passport = require('passport');
-const keys = require("./helpers/keys")
 require('./helpers/passport-setup');
+require('dotenv').config();
+
 
 const app = express();
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 var session = require("express-session");
 var flash = require("express-flash");
@@ -36,7 +37,7 @@ app.use(cookieParser("secret"));
 
 app.use(session({
     cookie: { maxAge: 60000 },
-    keys: [keys.session.cookieKey],
+    keys: [process.env.cookieKey],
     saveUninitialized: true,
     resave: "true",
     secret: "secret"
@@ -61,6 +62,8 @@ function generateHash(length) {
     }
     return output;
 }
+
+
 
 mongoose.connect("mongodb://localhost:27017/usersDB", {
     useNewUrlParser: true,
