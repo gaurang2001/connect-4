@@ -15,7 +15,7 @@
     <div class="container mt-5">
       <h1>Update Profile</h1>
       <br>
-      <form method="POST" action="/updateprofile" autocomplete="off">
+      <form method="POST" action="/updateprofile" autocomplete="off" onsubmit="return checkupdate(this)">
         <input name="email" type="hidden" value="<%= current_user.email %>">
         <div class="mb-3">
           <label for="email" class="form-label"><b> Email Address </b></label>
@@ -25,11 +25,14 @@
         <div class="mb-3">
           <label for="username" class="form-label"><b>Username</b></label>
           <input name="username" type="username" class="form-control" placeholder="Enter new username" id="username"
-            value="<%= current_user.username %>">
+            value="<%= current_user.username %>" onfocusout="updateusernamevalidation(this)" />
+          <div id="unamevalidation" style="color: #DC143C; font-size: 15px;"></div>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label"><b> Password</b></label>
-          <input name="password" type="password" class="form-control" placeholder="Enter new password" id="password">
+          <input name="password" type="password" class="form-control" placeholder="Enter new password" id="password"
+            onfocusout="updatepasswordvalidation(this)" />
+          <div id="pwdcheck" style="color: #DC143C; font-size: 15px;"></div>
         </div>
         <br>
         <div class="row">
@@ -41,6 +44,20 @@
 
       </form>
     </div>
+    <div class="mb-3">
+      <label for="password" class="form-label"><b> Password</b></label>
+      <input name="password" type="password" class="form-control" placeholder="Enter new password" id="password">
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <button class="btn btn-primary btn-md">Submit</button>
+        <a href="/" class="btn btn-danger btn-md">Cancel</a>
+      </div>
+    </div>
+
+    </form>
+  </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"

@@ -34,79 +34,68 @@
             <h5 class="modal-title" id="exampleModalLabel">Enter Room ID</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <input type="text" name="rname" id="rname" class="form-control" />
-            <div id="rnamevalidation" style="color: #DC143C; font-size: 15px;"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary"
-              onclick="rnamevalidation(document.getElementById('rname'))">Proceed</button>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <script>
-      function rnamevalidation(field) {
-        var rname = field.value;
-        var pass_msg = document.getElementById("rnamevalidation");
-        if (rname === "") {
-          pass_msg.innerText = "Room ID is required.";
-          return false;
-        }
-        else if (rname.match("[A-Za-z0-9]{6}$") === null) {
-          pass_msg.innerText = "Invalid Room ID!";
-          return false;
-        }
-        else {
-          pass_msg.innerText = "";
-          window.location.href = "/play/" + rname;
-        }
+        <script>
+          function rnamevalidation(field) {
+            var rname = field.value;
+            var pass_msg = document.getElementById("rnamevalidation");
+            if (rname === "") {
+              pass_msg.innerText = "Room ID is required.";
+              return false;
+            }
+            else if (rname.match(/^[a-zA-Z0-9]{6}$/) === null) {
+              pass_msg.innerText = "Invalid Room ID!";
+              return false;
+            }
+            else {
+              pass_msg.innerText = "";
+              window.location.href = "/play/" + rname;
+            }
 
-      }
-    </script>
+          }
+        </script>
 
-    <div class="pb-5">
-      <div class="container mt-5 mb-5 leaderboard-card"
-        style="background: #EBEDEF ; border-radius: 5px; box-shadow: 0 40px 50px;">
-        <h1><strong>Leaderboard</strong></h1>
-        <br>
-        <div class="table-responsive-sm">
-          <table class="table table-striped">
-            <tr>
-              <th scope="col">Rank</th>
-              <th scope="col">Username</th>
-              <th scope="col">Wins</th>
-            </tr>
+        <div class="pb-5">
+          <div class="container p-5 mt-5 mb-5"
+            style="background: #EBEDEF ; border-radius: 5px; box-shadow: 0 40px 50px;">
+            <h1><strong>Leaderboard</strong></h1>
+            <br>
+            <table class="table table-striped">
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Username</th>
+                <th scope="col">Wins</th>
+              </tr>
 
-            <% leaderboard.forEach(function(member,i){ %>
-            <tr scope="row">
-              <% if(member.email==current_user.email) {%>
-              <th class="bg-info">
-                <%= ++i %>
-              </th>
-              <th class="bg-info">
-                <%= current_user.username %>
-              </th>
-              <th class="bg-info">
-                <%= current_user.wins %>
-              </th>
-              <% }else { %>
+              <% leaderboard.forEach(function(member,i){ %>
+                <tr scope="row">
+                  <% if(member.email==current_user.email) {%>
+                    <th class="bg-info">
+                      <%= ++i %>
+                    </th>
+                    <th class="bg-info">
+                      <%= current_user.username %>
+                    </th>
+                    <th class="bg-info">
+                      <%= current_user.wins %>
+                    </th>
+                    <% }else { %>
 
-              <td>
-                <%= ++i %>
-              </td>
-              <td>
-                <%= member.username %>
-              </td>
-              <td>
-                <%= member.wins %>
-              </td>
-            </tr>
-            <% }}) %>
+                      <td>
+                        <%= ++i %>
+                      </td>
+                      <td>
+                        <%= member.username %>
+                      </td>
+                      <td>
+                        <%= member.wins %>
+                      </td>
+                </tr>
+                <% }}) %>
 
-          </table>
+            </table>
+          </div>
         </div>
       </div>
     </div>
