@@ -11,7 +11,7 @@ exports.isLoggedIn = async function (req, res, next) {
             else return res.redirect("/login");
         }
 
-        await jwt.verify(token, "secret", async (err, user_id) => {
+        await jwt.verify(token, process.env.cookieKey, async (err, user_id) => {
             if (err) {
                 console.log(err);
                 return res.redirect("/login");

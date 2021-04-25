@@ -1,6 +1,7 @@
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 exports.getLogin = (req, res) => {
     res.render("login", { notice: req.flash('notice'), alert: req.flash('alert'), title: "Login" });
@@ -21,8 +22,7 @@ exports.getHome = (req, res) => {
 }
 
 exports.postGoogleLogin = (req, res) => {
-    console.log(req.user);
-    const token = jwt.sign(req.user._id.toString(), "secret");
+    const token = jwt.sign(req.user._id.toString(), process.env.cookieKey);
     res.cookie("connect4", token, { expire: '30d' });
     req.flash("notice", "Successfully logged in, Welcome " + req.user.username);
     req.logout();
@@ -58,7 +58,7 @@ exports.postLogin = async (req, res) => {
                 return;
             }
             if (r) {
-                const token = jwt.sign(user._id.toString(), "secret");
+                const token = jwt.sign(user._id.toString(), process.env.cookieKey);
                 res.cookie("connect4", token, { expire: '30d' });
 
                 req.flash("notice", "Successfully logged in, Welcome " + username + "!");
