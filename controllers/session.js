@@ -3,15 +3,21 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 exports.getLogin = (req, res) => {
-    res.render("login", { notice: req.flash('notice'), alert: req.flash('alert') });
+    res.render("login", { notice: req.flash('notice'), alert: req.flash('alert'), title: "Login" });
 }
 
 exports.getRegister = (req, res) => {
-    res.render("register", { notice: req.flash('notice'), alert: req.flash('alert') });
+    res.render("register", { notice: req.flash('notice'), alert: req.flash('alert'), title: "Register" });
 }
 
 exports.getUpdateprofile = (req, res) => {
-    res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user });
+    res.render("updateprofile", { notice: req.flash('notice'), alert: req.flash('alert'), current_user: res.locals.user, title: "Profile" });
+}
+
+exports.getHome = (req, res) => {
+    User.find().sort({ wins: -1 }).exec(function (err, data) {
+        res.render("index", { current_user: res.locals.user, leaderboard: data, notice: req.flash('notice'), alert: req.flash('alert'), title: "Home" });
+    });
 }
 
 exports.postGoogleLogin = (req, res) => {

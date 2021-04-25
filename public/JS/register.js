@@ -55,10 +55,6 @@ function passwordsmatching(field) {
 
 //Form validation
 function check(form) {
-
-
-
   return usernamevalidation(form.uname) && passwordvalidation(form.pass) && passwordsmatching(form.re_pass);
-
 }
 

@@ -10,17 +10,19 @@ var player = {},
 
 var text = {
 	'yt': "Your turn",
-	'nyt': "Waiting for opponent",
-	'popover_h2': "Waiting for opponent",
-	'popover_p': "Give the url to a friend to play a game",
-	'popover_h2_win': "You won the game!",
-	'popover_p_win': "Give the url to a friend to play another game",
-	'popover_h2_lose': "You lost the game..",
-	'popover_p_lose': "Give the url to a friend to play another game",
-	'popover_h2_draw': "Its a draw.. bummer!",
-	'popover_p_draw': "Give the URL to a friend to play another game",
-	'popover_h2_another_session': "Not allowed",
-	'popover_p_another_session': "You cannot play a game against yourself"
+	'nyt': "Waiting for Opponent",
+	'modal_h2': "Waiting for an Opponent",
+	'modal_p': "Share the URL or room ID with a friend to play",
+	'modal_h2_win': "Congrats, you won the game!",
+	'modal_p_win': "Redirecting you in <span id=\"time\"></span> ...",
+	'modal_h2_lose': "You lost the game :(",
+	'modal_p_lose': "Redirecting you in <span id=\"time\"></span> ...",
+	'modal_h2_draw': "Its a Draw!!",
+	'modal_p_draw': "Redirecting you in <span id=\"time\"></span> ...",
+	'modal_h2_another_session': "Not allowed",
+	'modal_p_another_session': "You cannot play a game against yourself",
+	'modal_h2_room_full': "Sorry, the room is full",
+	'modal_p_room_full': "The room you are trying to join is full, please join another game"
 }
 
 init();
@@ -33,7 +35,6 @@ socket.on('assign', function (data) {
 		oc.addClass('yellow');
 		player.color = 'red';
 		player.oponend = 'yellow';
-		$('.underlay').removeClass('hidden');
 		$('#Modal').modal('show');
 	} else {
 		$('.status').html(text.nyt);
@@ -54,16 +55,18 @@ socket.on('winner', function (data) {
 	}
 
 	if (data.winner.winner == player.pid) {
-		$('#popover-title').html(text.popover_h2_win);
-		$('#popover-info').html(text.popover_p_win);
+		$('#header-bg').addClass("bg-success");
+		$('#popover-title').html(text.modal_h2_win);
+		$('#popover-info').html(text.modal_p_win);
 	} else {
-		$('#popover-title').html(text.popover_h2_lose);
-		$('#popover-info').html(text.popover_p_lose);
+		$('#header-bg').addClass("bg-danger");
+		$('#popover-title').html(text.modal_h2_lose);
+		$('#popover-info').html(text.modal_p_lose);
 	}
 
 	setTimeout(function () {
-		$('.underlay').removeClass('hidden');
 		$('#Modal').modal('show');
+		redirect_home();
 	}, 2000);
 });
 
@@ -71,18 +74,18 @@ socket.on('draw', function () {
 	oc.removeClass('show');
 	yc.removeClass('show');
 	change_turn(false);
-	$('#popover-title').html(text.popover_h2_draw);
-	$('#popover-info').html(text.popover_p_draw);
+	$('#header-bg').addClass("bg-warning");
+	$('#popover-title').html(text.modal_h2_draw);
+	$('#popover-info').html(text.modal_p_draw);
 	setTimeout(function () {
-		$('.underlay').removeClass('hidden');
 		$('#Modal').modal('show');
+		redirect_home();
 	}, 2000);
 });
 
 socket.on('start', function (data) {
 	change_turn(true);
 	yc.addClass('show');
-	$('.underlay').addClass('hidden');
 	$('#Modal').modal('hide');
 });
 
@@ -92,18 +95,16 @@ socket.on('assign_names', function (data) {
 })
 
 socket.on('stop', function (data) {
-	init();
-	reset_board();
-
 	oc.removeClass('show');
 	yc.removeClass('show');
 
-	$('#popover-title').html(text.popover_h2_win);
-	$('#popover-info').html(text.popover_p_win);
+	$('#header-bg').addClass("bg-success");
+	$('#popover-title').html(text.modal_h2_win);
+	$('#popover-info').html(text.modal_p_win);
 
 	setTimeout(function () {
-		$('.underlay').removeClass('hidden');
 		$('#Modal').modal('show');
+		redirect_home();
 	}, 500);
 });
 
@@ -122,14 +123,19 @@ socket.on('opponent_move', function (data) {
 });
 
 socket.on("not_allowed", function (data) {
-	$('#popover-title').html(text.popover_h2_another_session);
-	$('#popover-info').html(text.popover_p_another_session);
-	$('.underlay').removeClass('hidden');
+	$('#header-bg').addClass("bg-danger");
+	$('#popover-title').html(text.modal_h2_another_session);
+	$('#popover-info').html(text.modal_p_another_session);
 	$('#Modal').modal('show');
-	$('.share_url').hide();
-	setTimeout(function () {
-		window.location.href = "/";
-	}, 3000);
+	redirect_home();
+});
+
+socket.on("room_full", function (data) {
+	$('#header-bg').addClass("bg-danger");
+	$('#popover-title').html(text.modal_h2_room_full);
+	$('#popover-info').html(text.modal_p_room_full);
+	$('#Modal').modal('show');
+	redirect_home();
 });
 
 $('.cols > .col').mouseenter(function () {
@@ -167,10 +173,13 @@ function make_move(col, other) {
 
 function init() {
 	socket.emit('join', { room: room });
-	$('.share_url').val(window.location.href);
-	$('#popover-title').html(text.popover_h2);
-	$('#popover-info').html(text.popover_p);
+	$('#url-placeholder').val(window.location.href);
+	$('#room-placeholder').val(room);
+	$('#popover-title').html(text.modal_h2);
+	$('#popover-info').html(text.modal_p);
 	$('.status').html('');
+	$('.redirect-buttons').hide();
+
 }
 
 function reset_board() {
@@ -191,6 +200,33 @@ function change_turn(yt) {
 	}
 }
 
+function redirect_home() {
+	$('.inputs_url').hide();
+	$('.redirect-buttons').show();
+
+	var i = 9;
+
+	var interval = setInterval(function() {
+		$('#time').html(i);
+		i--;
+		if(i === -1) {
+			window.location.href = "/";
+			clearInterval(interval);
+		}
+	}, 1000);
+}
+
 $('.share_url').click(function () {
 	$(this).select();
+	document.execCommand("copy");
+});
+
+$('#copy-url').click(function () {
+	$("#url-placeholder").select();
+	document.execCommand("copy");
+});
+
+$('#copy-room').click(function () {
+	$("#room-placeholder").select();
+	document.execCommand("copy");
 });
