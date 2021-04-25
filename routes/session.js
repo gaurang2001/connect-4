@@ -23,10 +23,6 @@ router.post("/updateprofile", auth.isLoggedIn, sessionController.postUpdateprofi
 
 router.post("/logout", auth.isLoggedIn, sessionController.postLogout);
 
-router.get("/", auth.isLoggedIn, (req, res) => {
-  User.find().sort({ wins: -1 }).exec(function (err, data) {
-    res.render("index", { current_user: res.locals.user, leaderboard: data, notice: req.flash('notice'), alert: req.flash('alert') });
-  });
-});
+router.get("/", auth.isLoggedIn, sessionController.getHome);
 
 module.exports = router;

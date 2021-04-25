@@ -22,8 +22,8 @@ var flash = require("express-flash");
 const sessionRoutes = require("./routes/session");
 const gameRoutes = require("./routes/game");
 
-const gameLogic = require("./controllers/game");
-const users = require("./models/users");
+const gameLogic = require("./helpers/game_logic");
+const User = require("./models/users");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -74,7 +74,7 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
     io.on("connection", function (socket) {
         console.log("New client connected. ID: ", socket.id);
         socket.on("join", function (data) {
-            if (data.room in gameLogic.games) {
+            if (data.room in gameLogic.games && gameLogic.games[data.room].players === 1) {
                 var game = gameLogic.games[data.room];
                 if (typeof game.player2 != "undefined") return;
                 if (game.player1.email === socket.handshake.query.email) {
@@ -93,11 +93,15 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
                 game.player2 = socket;
                 socket.opponent = game.player1;
                 game.player1.opponent = socket;
+
                 socket.emit('assign', { pid: socket.pid, hash: socket.hash });
                 game.turn = 1;
                 socket.broadcast.to(data.room).emit("start");
                 io.in(socket.room).emit("assign_names", { player1: game.player1.username, player2: game.player2.username });
+                game.players = 2;
                 console.log("Player 2 ", socket.username, " has joined room: ", socket.room);
+            } else if (data.room in gameLogic.games && gameLogic.games[data.room].players === 2) {
+                socket.emit("room_full");
             } else {
                 if (rooms.indexOf(data.room) <= 0) socket.join(data.room);
 
@@ -110,12 +114,15 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
                 gameLogic.games[data.room] = {
                     player1: socket,
                     moves: 0,
-                    board: [[0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0]]
+                    players: 1,
+                    board: [
+                        [0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0]
+                    ]
                 };
                 rooms.push(data.room);
                 socket.emit("assign", { pid: socket.pid, hash: socket.hash });
@@ -134,15 +141,15 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
                         var winner = gameLogic.check_for_win(game.board);
 
                         if(winner) {
-                            users.findOne({email: socket.email}, (err, result) => {
+                            User.findOne({email: socket.email}, (err, result) => {
                                 if (err) {
                                     console.log(err);
                                 } else {
-                                    users.updateOne({email: socket.email}, {$set: {wins: result.wins + 1}}, (err, result) => {
+                                    User.updateOne({email: socket.email}, {$set: {wins: result.wins + 1}}, (err, result) => {
                                         if (err) throw err;
-                                    })
+                                    });
                                 }
-                            })
+                            });
                             
                             io.in(socket.room).emit("winner", {winner: winner});
                             delete gameLogic.games[socket.room];
@@ -157,12 +164,23 @@ mongoose.connect("mongodb://localhost:27017/usersDB", {
 
             socket.on('my_move', function (data) {
                 socket.broadcast.to(socket.room).emit('opponent_move', { col: data.col });
-            })
+            });
 
             socket.on("disconnect", function () {
                 console.log("Client disconnected. ID: ", socket.id);
-                if (socket.room in gameLogic.games && typeof gameLogic.games[socket.room].player2 != "undefined") {
-                    io.in(socket.room).emit("stop");
+                if (socket.room in gameLogic.games) {
+                    if(gameLogic.games[socket.room].players === 2) {
+                        User.findOne({email: socket.opponent.email}, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                User.updateOne({email: socket.opponent.email}, {$set: {wins: result.wins + 1}}, (err, result) => {
+                                    if (err) throw err;
+                                });
+                            }
+                        });
+                        io.in(socket.room).emit("stop");
+                    }
                     console.log("Room closed: " + socket.room);
                     delete gameLogic.games[socket.room];
                 } else {

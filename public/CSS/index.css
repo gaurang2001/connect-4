@@ -1,14 +1,41 @@
 .start-btn{
-
+    width: 50%;
     border: 1.75px solid #999900;
     border-radius: 30px;
     font-weight: bold;
     color: whitesmoke;
     font-size: 1.8em;
-
 }
 .start-btn:active {
 	box-shadow: none;
 	position: relative;
 	top: .2em;
+}
+
+.demo-img {
+    max-width: 100%;
+    margin: auto;
+}
+
+.leaderboard-card {
+    padding: 3rem;
+}
+
+@media only screen and (min-width: 1200px) {
+    .button-container {
+        padding: 3rem;
+        margin-top: 1.5rem;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .leaderboard-card {
+        padding: 3rem 1rem;
+    }
+    .start-btn {
+        width: 100%;
+    }
+    .button-container {
+        margin-bottom: 3rem;
+    }
 }
