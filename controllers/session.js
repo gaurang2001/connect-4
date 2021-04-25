@@ -1,6 +1,7 @@
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 exports.getLogin = (req, res) => {
     res.render("login", { notice: req.flash('notice'), alert: req.flash('alert'), title: "Login" });
@@ -21,7 +22,7 @@ exports.getHome = (req, res) => {
 }
 
 exports.postGoogleLogin = (req, res) => {
-    const token = jwt.sign(req.user.email, "secret");
+    const token = jwt.sign(req.user._id.toString(), process.env.cookieKey);
     res.cookie("connect4", token, { expire: '30d' });
     req.flash("notice", "Successfully logged in, Welcome " + req.user.username);
     req.logout();
@@ -29,22 +30,21 @@ exports.postGoogleLogin = (req, res) => {
 }
 
 exports.postLogin = async (req, res) => {
+    var username;
+    var user;
     const email = req.body.email;
     const password = req.body.your_pass;
-    var username;
-    const doesUserExists = await User.findOne({ email: email });
+    const doesUserExists = await User.findOne({ email: email }, function(err, data) {
+        user = data;
+    });
 
     if (!doesUserExists) {
         req.flash("alert", "User does not exist");
         res.redirect("/login");
         return;
     }
-    if (doesUserExists) {
-        User.findOne({ email }, function (err, result) {
-            if (err) throw err
-            else
-                username = result.username;
-        })
+    else {
+        username = user.username;
     }
 
     if (!email || !password) {
@@ -52,16 +52,16 @@ exports.postLogin = async (req, res) => {
         res.redirect("/login");
 
     } else {
-        bcrypt.compare(password, doesUserExists.password, function (e, r) {
+        bcrypt.compare(password, user.password, function (e, r) {
             if (e) {
                 console.log(e);
                 return;
             }
             if (r) {
-                const token = jwt.sign(doesUserExists.email, "secret");
+                const token = jwt.sign(user._id.toString(), process.env.cookieKey);
                 res.cookie("connect4", token, { expire: '30d' });
 
-                req.flash("notice", "Successfully logged in, Welcome " + username);
+                req.flash("notice", "Successfully logged in, Welcome " + username + "!");
                 res.redirect("/");
             } else {
                 req.flash("alert", "Incorrect email or password");

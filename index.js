@@ -33,14 +33,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(cookieParser("secret"));
+app.use(cookieParser(process.env.cookieKey));
 
 app.use(session({
     cookie: { maxAge: 60000 },
     keys: [process.env.cookieKey],
     saveUninitialized: true,
     resave: "true",
-    secret: "secret"
+    secret: process.env.cookieKey
 }));
 
 app.use(passport.initialize());
