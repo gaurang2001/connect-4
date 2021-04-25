@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
+require('dotenv').config();
 
 exports.isLoggedIn = async function (req, res, next) {
     try {
@@ -10,13 +11,13 @@ exports.isLoggedIn = async function (req, res, next) {
             else return res.redirect("/login");
         }
 
-        await jwt.verify(token, "secret", async (err, user_email) => {
+        await jwt.verify(token, "secret", async (err, user_id) => {
             if (err) {
                 console.log(err);
                 return res.redirect("/login");
             }
 
-            await User.findOne({ email: user_email }, function (err, result) {
+            await User.findOne({ _id: user_id }, function (err, result) {
                 if (err) throw err;
                 res.locals.user = result;
             });
