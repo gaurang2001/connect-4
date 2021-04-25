@@ -30,7 +30,7 @@ init();
 socket.on('assign', function (data) {
 	player.pid = data.pid;
 	player.hash = data.hash;
-	if (player.pid == "1") {
+	if (player.pid === 1) {
 		yc.addClass('red');
 		oc.addClass('yellow');
 		player.color = 'red';
@@ -43,6 +43,8 @@ socket.on('assign', function (data) {
 		oc.addClass('show');
 		player.color = 'yellow';
 		player.oponend = 'red';
+		$('#left').css("opacity", "1");
+		$('#right').css("opacity", "0.7");
 	}
 });
 
@@ -54,7 +56,7 @@ socket.on('winner', function (data) {
 		$('.cols .col .coin#coin_' + data.winner.winner_coins[i]).addClass('winner_coin');
 	}
 
-	if (data.winner.winner == player.pid) {
+	if (data.winner.winner === player.pid) {
 		$('#header-bg').addClass("bg-success");
 		$('#popover-title').html(text.modal_h2_win);
 		$('#popover-info').html(text.modal_p_win);
@@ -194,9 +196,25 @@ function change_turn(yt) {
 	if (yt) {
 		your_turn = true;
 		$('.status').html(text.yt);
+		if(player.pid === 1) {
+			$('#left').css("opacity", "1");
+			$('#right').css("opacity", "0.7");
+		}
+		else {
+			$('#left').css("opacity", "0.7");
+			$('#right').css("opacity", "1");
+		}
 	} else {
 		your_turn = false;
 		$('.status').html(text.nyt);
+		if(player.pid === 1) {
+			$('#left').css("opacity", "0.7");
+			$('#right').css("opacity", "1");
+		}
+		else {
+			$('#left').css("opacity", "1");
+			$('#right').css("opacity", "0.7");
+		}
 	}
 }
 
