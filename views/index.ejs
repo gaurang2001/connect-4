@@ -62,11 +62,11 @@
             var rname = field.value;
             var pass_msg = document.getElementById("rnamevalidation");
             if (rname === "") {
-              pass_msg.innerText = "Roomname is required.";
+              pass_msg.innerText = "Room ID is required.";
               return false;
             }
-            else if (rname.match("[A-Za-z0-9]{6}$") === null) {
-              pass_msg.innerText = "Invalid Room Name!";
+            else if (rname.match(/^[a-zA-Z0-9]{6}$/) === null) {
+              pass_msg.innerText = "Invalid Room ID!";
               return false;
             }
             else {

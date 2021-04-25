@@ -6,8 +6,8 @@ function usernamevalidation(field) {
     pass_msg.innerText = "Username is required.";
     return false;
   }
-  else if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{5}([_a-zA-Z0-9]{6})?/) === null) {
-    pass_msg.innerText = "Username has to start with _ or alphabets, and be between 6 to 12 characters with alphanumerics!";
+  else if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{3,8}$/) === null) {
+    pass_msg.innerText = "Username has to start with _ or alphabets, and be between 4 to 12 characters with alphanumerics!";
     return false;
   }
   else {
@@ -56,9 +56,45 @@ function passwordsmatching(field) {
 //Form validation
 function check(form) {
 
-
-
   return usernamevalidation(form.uname) && passwordvalidation(form.pass) && passwordsmatching(form.re_pass);
 
 }
 
+
+//Code for data validation
+function updateusernamevalidation(field) {
+  var usern = field.value;
+  var pass_msg = document.getElementById("unamevalidation");
+
+  if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{3,8}$/) === null && usern != "") {
+    pass_msg.innerText = "Username has to start with _ or alphabets, and be between 4 to 12 characters with alphanumerics!";
+    return false;
+  }
+  else {
+    pass_msg.innerText = "";
+    return true;
+  }
+
+}
+
+function updatepasswordvalidation(field) {
+  var pass = field.value;
+  var pass_msg = document.getElementById("pwdcheck");
+  if (pass.match("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})") === null && pass != "") {
+    pass_msg.innerText = "The password must be eight characters or longer, and have at least 1 lowercase alphabetical character, at least 1 uppercase alphabetical character and at least 1 numeric character";
+    return false;
+  }
+  else {
+    pass_msg.innerText = "";
+    return true;
+  }
+
+}
+
+function checkupdate(form) {
+
+
+
+  return updateusernamevalidation(form.username) && updatepasswordvalidation(form.password);
+
+}
