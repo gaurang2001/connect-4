@@ -17,17 +17,17 @@ exports.isLoggedIn = async function (req, res, next) {
                 return res.redirect("/login");
             }
 
-            await User.findOne({ _id: user_id }, function (err, result) {
+            await User.findOne({ _id: user_id }, async function (err, result) {
                 if (err) throw err;
-                res.locals.user = result;
+                res.locals.user = await result;
+
+                if (req.originalUrl === "/login" || req.originalUrl === "/register") {
+                    req.flash("alert", "User is already logged in");
+                    return res.redirect("/");
+                }
+
+                next();
             });
-
-            if (req.originalUrl === "/login" || req.originalUrl === "/register") {
-                req.flash("alert", "User is already logged in");
-                return res.redirect("/");
-            }
-
-            next();
         });
     }
 
