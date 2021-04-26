@@ -63,9 +63,7 @@ function generateHash(length) {
     return output;
 }
 
-
-
-mongoose.connect("mongodb://localhost:27017/usersDB", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/usersDB", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {

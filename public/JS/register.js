@@ -6,7 +6,7 @@ function usernamevalidation(field) {
     pass_msg.innerText = "Username is required.";
     return false;
   }
-  else if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{3,8}$/) === null) {
+  else if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{3,11}$/) === null) {
     pass_msg.innerText = "Username has to start with _ or alphabets, and be between 4 to 12 characters with alphanumerics!";
     return false;
   }
@@ -66,7 +66,7 @@ function updateusernamevalidation(field) {
   var usern = field.value;
   var pass_msg = document.getElementById("unamevalidation");
 
-  if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{3,8}$/) === null && usern != "") {
+  if (usern.match(/^[_a-zA-Z][_a-zA-Z0-9]{3,11}$/) === null && usern != "") {
     pass_msg.innerText = "Username has to start with _ or alphabets, and be between 4 to 12 characters with alphanumerics!";
     return false;
   }
