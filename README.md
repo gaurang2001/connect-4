@@ -27,12 +27,14 @@ Add a new variable called "PORT" and assign the value of whichever port number y
 
 #### After these changes, make sure to rename the .env.template file to .env
 
+
 ## Technical Specifications
 
 #### Versions 
 - Node.js - 12.18.2
 - MongoDB - 3.6.5
 - Socket.io - 4.0.1
+
 #### Setup
 1. Make sure you have Node.js, MongoDB installed on your system, if not, follow these steps: 
 
@@ -61,7 +63,7 @@ npm install
 npm start
 ```
 
-5. Open http://localhost:8080 on your browser and you’re good to go
+5. Open http://localhost:8080 on your browser and you’re good to go! :)
 
 
 
