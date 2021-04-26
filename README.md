@@ -3,7 +3,7 @@ Connect-4 Real-Time Multiplayer Web Application using Node.js
 
 ## Details to set up your .env file
 
-A .env.template file has been included in the root directory so as to provide a template to change it according to your needs.
+A .env.template file has been included in the root directory so as to provide a template to change it according to your needs. DON'T USE " " around the values while assigning.
 
 
 ### Google
@@ -17,7 +17,7 @@ Once you get the credential, add the clientID and clientSecret in the .env file 
 
 > This is to setup the cookie key for your application
 
-Add any string in place of the example string in cookieKey to use that as your cookie key .
+Assign any string value to cookieKey which will be used as your cookie key.
 
 ### Port Number (Optional)
 
